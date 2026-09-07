@@ -253,7 +253,7 @@ function blattAnfragenAnlegen(wb) {
     zelle.fill = {
       type: 'pattern',
       pattern: 'solid',
-      fgColor: { argb: spalte.key === null ? FARBE_KOPF_MANUELL : FARBE_KOPF }
+      fgColor: { argb: spalte.bereich === 'verwaltung' ? FARBE_KOPF_MANUELL : FARBE_KOPF }
     };
     zelle.alignment = { wrapText: true, vertical: 'middle', horizontal: 'left' };
     zelle.border = { bottom: { style: 'thin', color: { argb: 'FFFFFFFF' } } };
@@ -329,7 +329,7 @@ async function mappeLaden() {
 
 export function zeileAusAnfrage(anfrage, lfdNr) {
   return SPALTEN.map((spalte) => {
-    if (spalte.key === null) return null;
+    if (spalte.bereich === 'verwaltung') return null;
     if (spalte.key === '_lfdNr') return lfdNr;
     if (spalte.key === '_eingang') return nurDatum(anfrage._eingang);
     if (spalte.key === '_einwilligung') return nurDatum(anfrage._einwilligung);
@@ -464,7 +464,7 @@ export async function neuAufbauen() {
           if (!id) return;
           const werte = {};
           SPALTEN.forEach((spalte, i) => {
-            if (spalte.key !== null) return;
+            if (spalte.bereich !== 'verwaltung') return;
             const wert = zeile.getCell(i + 1).value;
             if (wert !== null && wert !== undefined && wert !== '') werte[i] = wert;
           });

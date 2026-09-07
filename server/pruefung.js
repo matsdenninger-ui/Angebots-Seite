@@ -4,9 +4,19 @@
  * Grundsatz: Auswahlfelder müssen aus der Liste stammen — sonst fällt die Zeile
  * aus jeder Auswertung. Freitext wird gekürzt statt abgelehnt, damit niemand ein
  * ausgefülltes Formular wegen zwei Zeichen zu viel verliert.
+ *
+ * Geprüft wird ausschließlich gegen LISTEN_BEWERBER. Ein Absender kann damit
+ * keinen Status und keinen Absagegrund setzen, auch nicht mit einer von Hand
+ * gebauten Anfrage — diese Spalten gehören der Verwaltung.
  */
 
-import { LISTEN, ALLE_GEWERKE, PFLICHTFELDER, MAX_LAENGE, GEWERKE_GRUPPEN } from './felder.js';
+import {
+  LISTEN_BEWERBER,
+  ALLE_GEWERKE,
+  PFLICHTFELDER,
+  MAX_LAENGE,
+  GEWERKE_GRUPPEN
+} from './felder.js';
 
 const EMAIL_MUSTER = /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i;
 const PLZ_MUSTER = /^[0-9]{4,5}$/;
@@ -59,7 +69,7 @@ export function anfragePruefen(eingabe) {
   for (const feld of auswahlFelder) {
     const wert = text(eingabe[feld], 120);
     if (!wert) continue;
-    if (!LISTEN[feld].includes(wert)) {
+    if (!LISTEN_BEWERBER[feld].includes(wert)) {
       fehler.push(`${BESCHRIFTUNG[feld] ?? feld}: „${wert}“ steht nicht zur Auswahl.`);
       continue;
     }
@@ -96,7 +106,7 @@ export function anfragePruefen(eingabe) {
     ...new Set(
       liste(eingabe.nachweise)
         .map((n) => text(n, 120))
-        .filter((n) => LISTEN.nachweise.includes(n))
+        .filter((n) => LISTEN_BEWERBER.nachweise.includes(n))
     )
   ];
 

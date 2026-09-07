@@ -25,6 +25,49 @@ Für den Betrieb: `cp .env.example .env` und ausfüllen.
 
 ---
 
+## Zwei Bereiche: Bewerber und Verwaltung
+
+Die Seite ist **ausschließlich** dafür da, dass ein Auftragnehmer sich bewirbt
+und seine Angaben macht. Alles, was mit der Bewertung dieser Bewerbung zu tun
+hat, ist Verwaltungssache und für den Bewerber unsichtbar.
+
+| | **Bewerber** | **Verwaltung** |
+| --- | --- | --- |
+| Wo | Landing Page, `/api/felder`, `/api/anfrage` | Excel-Datei, `data/`, `/api/nachtragen` |
+| Wer | jeder Besucher | nur die GWB |
+| Inhalt | Firma, Kontakt, Gewerke, Kapazität, Nachweise, Nachricht | Stand der Dinge, Status, Termine, Absagegrund, Bearbeiter-Kürzel |
+| Im Code | `LISTEN_BEWERBER`, `SPALTEN` mit `bereich: 'bewerber'` | `LISTEN_VERWALTUNG`, `SPALTEN` mit `bereich: 'verwaltung'` |
+
+### Was der Bewerber sieht
+
+Die Landing Page und die 34 Spalten, die aus seinem eigenen Formular stammen.
+`/api/felder` liefert nur `LISTEN_BEWERBER` — diese Antwort kann jeder im
+Browser mitlesen, deshalb steht dort nichts Internes.
+
+### Was nur die Verwaltung sieht
+
+Die zehn grauen Spalten in der Excel-Datei — **Stand der Dinge**, Status, die
+Termin-Daten (Unterlagen angefordert / Gespräch / in Bieterkreis), letzter
+Kontakt, Absagegrund — samt ihrer Auswahlmenüs. Sie verlassen den Server nie:
+
+- Sie stehen nicht in `/api/felder`.
+- Sie stehen nicht in `/api/status` (dort steht öffentlich nur `{"ok": true}`;
+  Einzelheiten gibt es mit dem Wartungsschlüssel).
+- Sie lassen sich nicht von außen setzen. Wer eine Anfrage von Hand baut und
+  `status=beauftragt` mitschickt, kommt damit nicht durch: `pruefung.js` prüft
+  nur gegen `LISTEN_BEWERBER`, alles andere fällt weg.
+- Sie stehen nicht in der Benachrichtigungsmail.
+- Sie werden bei einem neuen Eingang nicht überschrieben.
+
+Die Grenze ist an einer Stelle im Code definiert. Wer in `server/felder.js` eine
+Spalte hinzufügt, muss `bereich` setzen — und entscheidet damit, ob ein Bewerber
+sie zu sehen bekommt. **Im Zweifel: `'verwaltung'`.**
+
+In der Excel-Datei ist dieselbe Grenze an der Kopffarbe zu erkennen: blau kommt
+vom Bewerber, grau gehört der GWB.
+
+---
+
 ## Die Excel-Datei
 
 Die Arbeitsmappe hat drei Blätter:
@@ -37,14 +80,9 @@ Die Arbeitsmappe hat drei Blätter:
 
 ### Zwei Sorten Spalten
 
-Das Blatt „Anfragen“ unterscheidet sie an der Kopffarbe:
-
-- **Blau — kommt vom Formular.** Wird beim Eingang geschrieben und danach nicht
-  mehr angefasst.
-- **Grau — pflegt die GWB.** „Stand der Dinge“, Status, die Termin-Daten
-  (Unterlagen angefordert / Gespräch / in Bieterkreis), letzter Kontakt,
-  Absagegrund. **Diese Spalten überlebt jeder neue Eingang** — der Server hängt
-  nur Zeilen an, er baut die Datei nicht neu.
+Blau kommt vom Bewerber, grau pflegt die GWB — siehe oben. **Die grauen Spalten
+überlebt jeder neue Eingang**, weil der Server nur Zeilen anhängt und die Datei
+nicht neu baut.
 
 Die Konventionen der Interessentenliste gelten unverändert weiter: das Datum
 steht in der Datumsspalte statt im Satz, „Stand der Dinge“ bleibt Freitext, und
@@ -138,12 +176,15 @@ data/            Excel-Liste, anfragen.jsonl, Anlagen (nicht im Repository)
 
 ### Schnittstellen
 
-| Route | Zweck |
-| --- | --- |
-| `GET /api/felder` | Gewerke und Auswahlmenüs für das Formular |
-| `POST /api/anfrage` | Anfrage entgegennehmen (multipart, mit Anlagen) |
-| `POST /api/nachtragen` | Liegengebliebene Anfragen in die Excel-Datei schreiben |
-| `GET /api/status` | Läuft der Server, ist Mailversand eingerichtet |
+| Route | Bereich | Zweck |
+| --- | --- | --- |
+| `GET /api/felder` | Bewerber | Gewerke und die Auswahlmenüs des Formulars |
+| `POST /api/anfrage` | Bewerber | Anfrage entgegennehmen (multipart, mit Anlagen) |
+| `GET /api/status` | beide | öffentlich nur `{"ok": true}`; mit Wartungsschlüssel die Einzelheiten |
+| `POST /api/nachtragen` | Verwaltung | Liegengebliebene Anfragen nachtragen (Wartungsschlüssel) |
+
+Mehr gibt es nicht. Es existiert keine Route, über die sich der Inhalt der Liste
+abrufen ließe — wer die Anfragen sehen will, öffnet die Excel-Datei.
 
 ---
 
@@ -170,7 +211,8 @@ mit 25 parallelen Eingängen: 25 Zeilen, lückenlose lfd. Nummern).
 
 - [ ] Kontaktdaten im Fuß und in der Erfolgsmeldung gegen das Impressum prüfen
       (Telefon, E-Mail, Links zu Impressum und Datenschutz stehen aktuell als
-      Platzhalter in `public/index.html`).
+      Platzhalter in `public/index.html`, markiert durch einen Kommentar über
+      dem `<footer>`).
 - [ ] Farben unter `--gwb-*` in `public/styles.css` gegen das Corporate Design
       abgleichen; das Logo im Kopf (`.marke__zeichen`) durch die echte Bilddatei
       ersetzen.

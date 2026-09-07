@@ -12,7 +12,7 @@ import fs from 'node:fs/promises';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 
-import { GEWERKE_GRUPPEN, LISTEN, PFLICHTFELDER } from './felder.js';
+import { GEWERKE_GRUPPEN, LISTEN_BEWERBER, PFLICHTFELDER } from './felder.js';
 import { anfragePruefen } from './pruefung.js';
 import { anfrageSpeichern, nachtragen, DATEN_ORDNER, EXCEL_DATEI } from './excel.js';
 import { eingangMelden, bestaetigungSenden, mailAktiv } from './mail.js';
@@ -102,9 +102,19 @@ app.use((req, res, weiter) => {
 
 app.use(express.static(OEFFENTLICH, { extensions: ['html'] }));
 
-/** Das Formular holt Gewerke und Menüs von hier — eine Quelle, keine Dopplung. */
+/**
+ * Das Formular holt Gewerke und Menüs von hier — eine Quelle, keine Dopplung.
+ *
+ * Ausgeliefert wird ausschließlich LISTEN_BEWERBER. Status, Absagegründe und
+ * die Kürzel der Bearbeiter sind Verwaltungssache und verlassen den Server
+ * nicht: diese Antwort kann jeder Besucher im Browser mitlesen.
+ */
 app.get('/api/felder', (req, res) => {
-  res.json({ gewerkeGruppen: GEWERKE_GRUPPEN, listen: LISTEN, pflichtfelder: PFLICHTFELDER });
+  res.json({
+    gewerkeGruppen: GEWERKE_GRUPPEN,
+    listen: LISTEN_BEWERBER,
+    pflichtfelder: PFLICHTFELDER
+  });
 });
 
 app.post('/api/anfrage', bremse, (req, res) => {
@@ -172,17 +182,30 @@ app.post('/api/anfrage', bremse, (req, res) => {
   });
 });
 
+/* --- Verwaltung ----------------------------------------------------------
+   Alles unterhalb dieser Linie ist Sache der GWB und nur mit dem
+   Wartungsschlüssel erreichbar. Ohne gesetzten Schlüssel gibt es die Routen
+   gar nicht.
+   ------------------------------------------------------------------------ */
+
+function wartungsSchluesselStimmt(req) {
+  const erwartet = process.env.WARTUNGS_SCHLUESSEL;
+  if (!erwartet) return false;
+  const geschickt = req.get('X-Wartungs-Schluessel') ?? '';
+  return (
+    geschickt.length === erwartet.length &&
+    crypto.timingSafeEqual(Buffer.from(geschickt), Buffer.from(erwartet))
+  );
+}
+
 /** Trägt nach, was bei gesperrter Excel-Datei liegen geblieben ist. */
 app.post('/api/nachtragen', async (req, res) => {
   if (!process.env.WARTUNGS_SCHLUESSEL) {
     return res.status(404).json({ ok: false, fehler: ['Nicht eingerichtet.'] });
   }
-  const geschickt = req.get('X-Wartungs-Schluessel') ?? '';
-  const erwartet = process.env.WARTUNGS_SCHLUESSEL;
-  const gleich =
-    geschickt.length === erwartet.length &&
-    crypto.timingSafeEqual(Buffer.from(geschickt), Buffer.from(erwartet));
-  if (!gleich) return res.status(403).json({ ok: false, fehler: ['Kein Zugriff.'] });
+  if (!wartungsSchluesselStimmt(req)) {
+    return res.status(403).json({ ok: false, fehler: ['Kein Zugriff.'] });
+  }
 
   try {
     const ergebnis = await nachtragen();
@@ -192,7 +215,15 @@ app.post('/api/nachtragen', async (req, res) => {
   }
 });
 
+/**
+ * Lebenszeichen für Überwachung und Ladebalancer.
+ *
+ * Öffentlich steht hier nur, dass der Server läuft — der Name der Excel-Datei
+ * und der Zustand des Mailversands gehen niemanden von außen etwas an. Mit dem
+ * Wartungsschlüssel gibt es die Einzelheiten.
+ */
 app.get('/api/status', (req, res) => {
+  if (!wartungsSchluesselStimmt(req)) return res.json({ ok: true });
   res.json({ ok: true, mail: mailAktiv, excel: path.basename(EXCEL_DATEI) });
 });
 

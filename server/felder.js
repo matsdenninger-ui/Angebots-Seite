@@ -134,8 +134,21 @@ export const GEWERKE_GRUPPEN = [
 
 export const ALLE_GEWERKE = GEWERKE_GRUPPEN.flatMap((g) => g.gewerke);
 
-/** Auswahlmenüs — entsprechen dem Blatt "Listen" der Interessentenliste. */
-export const LISTEN = {
+/* ==========================================================================
+   ZWEI BEREICHE — die Trennlinie dieses Projekts
+
+   BEWERBER   Alles, was der Auftragnehmer im Formular sieht und ausfüllt.
+              Wird über /api/felder ausgeliefert und ist damit öffentlich.
+   VERWALTUNG Alles, was nur die GWB sieht: Bewertung, Status, Absagegründe,
+              Bearbeiter-Kürzel. Verlässt den Server nie, steht ausschließlich
+              in der Excel-Datei.
+
+   Wer hier eine Liste einsortiert, entscheidet damit, ob ein Bewerber sie zu
+   sehen bekommt. Im Zweifel: VERWALTUNG.
+   ========================================================================== */
+
+/** Auswahlmenüs im Formular. Öffentlich — jeder Besucher kann sie abrufen. */
+export const LISTEN_BEWERBER = {
   art: [
     'Nachunternehmer (Ausführung)',
     'Lieferant (Material)',
@@ -214,7 +227,15 @@ export const LISTEN = {
     'Bezug auf eine laufende Ausschreibung',
     'Nachfrage zu einer früheren Anfrage'
   ],
-  /* Die Ausgangs-Spalten füllt die GWB später von Hand — wie in der Interessentenliste. */
+};
+
+/**
+ * Auswahlmenüs, die nur in der Excel-Datei vorkommen.
+ *
+ * Diese Listen werden NICHT über /api/felder ausgeliefert. Ein Bewerber soll
+ * weder unsere Absagegründe noch die Kürzel der Bearbeiter zu sehen bekommen.
+ */
+export const LISTEN_VERWALTUNG = {
   status: [
     'neu',
     'Unterlagen angefordert',
@@ -238,61 +259,69 @@ export const LISTEN = {
   bearbeiter: ['Am.', 'AS.', 'BU', 'GWB']
 };
 
+/** Beide Bereiche zusammen — nur die Excel-Datei braucht das. */
+export const LISTEN = { ...LISTEN_BEWERBER, ...LISTEN_VERWALTUNG };
+
 /**
  * Excel-Spalten in der Reihenfolge, in der sie im Blatt stehen.
  *
- *   key      Feldname aus dem Formular (oder null: wird von der GWB gepflegt)
+ *   bereich  'bewerber'   — kommt aus dem Formular, wird beim Eingang geschrieben
+ *            'verwaltung' — pflegt die GWB von Hand, bleibt bei jedem Eingang stehen
+ *   key      Feldname aus dem Formular (bei 'verwaltung' immer null)
  *   header   Spaltenüberschrift
  *   breite   Spaltenbreite
  *   liste    Name der Auswahlliste für das Menü in Excel
  *   typ      'datum' | 'text' | 'zahl'
+ *
+ * Die Kopfzeile färbt sich nach 'bereich': blau für den Bewerber, grau für die
+ * Verwaltung. Wer eine Spalte hinzufügt, muss sich also entscheiden.
  */
 export const SPALTEN = [
-  { key: '_lfdNr', header: 'lfd.\nNr', breite: 6, typ: 'zahl' },
-  { key: '_eingang', header: 'Eingang\nAnfrage', breite: 12, typ: 'datum' },
-  { key: 'art', header: 'Art', breite: 22, liste: 'art' },
-  { key: 'firma', header: 'Firma', breite: 30 },
-  { key: 'ansprechpartner', header: 'Ansprech-\npartner', breite: 22 },
-  { key: 'funktion', header: 'Funktion', breite: 18 },
-  { key: 'strasse', header: 'Straße', breite: 24 },
-  { key: 'plz', header: 'PLZ', breite: 8 },
-  { key: 'ort', header: 'Ort', breite: 18 },
-  { key: 'telefon', header: 'Telefon', breite: 18 },
-  { key: 'mobil', header: 'Mobil', breite: 18 },
-  { key: 'email', header: 'E-Mail', breite: 28 },
-  { key: 'website', header: 'Website', breite: 24 },
-  { key: 'gruendungsjahr', header: 'seit', breite: 7, typ: 'zahl' },
-  { key: 'mitarbeiter', header: 'Mitarbeiter', breite: 12, liste: 'mitarbeiter' },
-  { key: 'hauptgewerk', header: 'Hauptgewerk', breite: 28 },
-  { key: 'gewerke', header: 'weitere Gewerke', breite: 40 },
-  { key: 'gewerkeGruppen', header: 'Bereiche', breite: 24 },
-  { key: 'leistung', header: 'Leistungsbeschreibung', breite: 45 },
-  { key: 'kolonnen', header: 'arbeitet mit', breite: 26, liste: 'kolonnen' },
-  { key: 'einsatzradius', header: 'Einsatzgebiet', breite: 22, liste: 'einsatzradius' },
-  { key: 'kapazitaet', header: 'freie Kapazität', breite: 22, liste: 'kapazitaet' },
-  { key: 'verfuegbarAb', header: 'verfügbar\nab', breite: 12, typ: 'datum' },
-  { key: 'auftragsgroesse', header: 'Auftragsgröße', breite: 20, liste: 'auftragsgroesse' },
-  { key: 'erfahrungWohnungsbau', header: 'Erfahrung\nWohnungsbau', breite: 24, liste: 'erfahrungWohnungsbau' },
-  { key: 'referenzen', header: 'Referenzen', breite: 40 },
-  { key: 'nachweise', header: 'Nachweise', breite: 40 },
-  { key: 'haftpflichtSumme', header: 'Haftpflicht\nDeckung', breite: 14 },
-  { key: 'anlass', header: 'Anlass', breite: 26, liste: 'anlass' },
-  { key: 'objekt', header: 'Objekt', breite: 12 },
-  { key: 'woherKennenSieUns', header: 'Woher kennen\nSie uns?', breite: 24, liste: 'woherKennenSieUns' },
-  { key: 'nachricht', header: 'Nachricht des Absenders', breite: 45 },
-  { key: '_anlagen', header: 'Anlagen', breite: 30 },
-  { key: '_einwilligung', header: 'Einwilligung\nam', breite: 12, typ: 'datum' },
-  /* Ab hier pflegt die GWB von Hand — genau wie "Stand der Dinge" in der Interessentenliste. */
-  { key: null, header: 'Stand der Dinge', breite: 45 },
-  { key: null, header: 'Status', breite: 20, liste: 'status' },
-  { key: null, header: 'Unterlagen\nangefordert am', breite: 14, typ: 'datum' },
-  { key: null, header: 'durch', breite: 8, liste: 'bearbeiter' },
-  { key: null, header: 'Gespräch\nam', breite: 12, typ: 'datum' },
-  { key: null, header: 'durch', breite: 8, liste: 'bearbeiter' },
-  { key: null, header: 'in Bieterkreis\nam', breite: 14, typ: 'datum' },
-  { key: null, header: 'durch', breite: 8, liste: 'bearbeiter' },
-  { key: null, header: 'letzter\nKontakt am', breite: 12, typ: 'datum' },
-  { key: null, header: 'Absagegrund', breite: 30, liste: 'absagegrund' }
+  { bereich: 'bewerber', key: '_lfdNr', header: 'lfd.\nNr', breite: 6, typ: 'zahl' },
+  { bereich: 'bewerber', key: '_eingang', header: 'Eingang\nAnfrage', breite: 12, typ: 'datum' },
+  { bereich: 'bewerber', key: 'art', header: 'Art', breite: 22, liste: 'art' },
+  { bereich: 'bewerber', key: 'firma', header: 'Firma', breite: 30 },
+  { bereich: 'bewerber', key: 'ansprechpartner', header: 'Ansprech-\npartner', breite: 22 },
+  { bereich: 'bewerber', key: 'funktion', header: 'Funktion', breite: 18 },
+  { bereich: 'bewerber', key: 'strasse', header: 'Straße', breite: 24 },
+  { bereich: 'bewerber', key: 'plz', header: 'PLZ', breite: 8 },
+  { bereich: 'bewerber', key: 'ort', header: 'Ort', breite: 18 },
+  { bereich: 'bewerber', key: 'telefon', header: 'Telefon', breite: 18 },
+  { bereich: 'bewerber', key: 'mobil', header: 'Mobil', breite: 18 },
+  { bereich: 'bewerber', key: 'email', header: 'E-Mail', breite: 28 },
+  { bereich: 'bewerber', key: 'website', header: 'Website', breite: 24 },
+  { bereich: 'bewerber', key: 'gruendungsjahr', header: 'seit', breite: 7, typ: 'zahl' },
+  { bereich: 'bewerber', key: 'mitarbeiter', header: 'Mitarbeiter', breite: 12, liste: 'mitarbeiter' },
+  { bereich: 'bewerber', key: 'hauptgewerk', header: 'Hauptgewerk', breite: 28 },
+  { bereich: 'bewerber', key: 'gewerke', header: 'weitere Gewerke', breite: 40 },
+  { bereich: 'bewerber', key: 'gewerkeGruppen', header: 'Bereiche', breite: 24 },
+  { bereich: 'bewerber', key: 'leistung', header: 'Leistungsbeschreibung', breite: 45 },
+  { bereich: 'bewerber', key: 'kolonnen', header: 'arbeitet mit', breite: 26, liste: 'kolonnen' },
+  { bereich: 'bewerber', key: 'einsatzradius', header: 'Einsatzgebiet', breite: 22, liste: 'einsatzradius' },
+  { bereich: 'bewerber', key: 'kapazitaet', header: 'freie Kapazität', breite: 22, liste: 'kapazitaet' },
+  { bereich: 'bewerber', key: 'verfuegbarAb', header: 'verfügbar\nab', breite: 12, typ: 'datum' },
+  { bereich: 'bewerber', key: 'auftragsgroesse', header: 'Auftragsgröße', breite: 20, liste: 'auftragsgroesse' },
+  { bereich: 'bewerber', key: 'erfahrungWohnungsbau', header: 'Erfahrung\nWohnungsbau', breite: 24, liste: 'erfahrungWohnungsbau' },
+  { bereich: 'bewerber', key: 'referenzen', header: 'Referenzen', breite: 40 },
+  { bereich: 'bewerber', key: 'nachweise', header: 'Nachweise', breite: 40 },
+  { bereich: 'bewerber', key: 'haftpflichtSumme', header: 'Haftpflicht\nDeckung', breite: 14 },
+  { bereich: 'bewerber', key: 'anlass', header: 'Anlass', breite: 26, liste: 'anlass' },
+  { bereich: 'bewerber', key: 'objekt', header: 'Objekt', breite: 12 },
+  { bereich: 'bewerber', key: 'woherKennenSieUns', header: 'Woher kennen\nSie uns?', breite: 24, liste: 'woherKennenSieUns' },
+  { bereich: 'bewerber', key: 'nachricht', header: 'Nachricht des Absenders', breite: 45 },
+  { bereich: 'bewerber', key: '_anlagen', header: 'Anlagen', breite: 30 },
+  { bereich: 'bewerber', key: '_einwilligung', header: 'Einwilligung\nam', breite: 12, typ: 'datum' },
+  /* --- Ab hier: Verwaltung. Kein Bewerber sieht diese Spalten je. ------- */
+  { bereich: 'verwaltung', key: null, header: 'Stand der Dinge', breite: 45 },
+  { bereich: 'verwaltung', key: null, header: 'Status', breite: 20, liste: 'status' },
+  { bereich: 'verwaltung', key: null, header: 'Unterlagen\nangefordert am', breite: 14, typ: 'datum' },
+  { bereich: 'verwaltung', key: null, header: 'durch', breite: 8, liste: 'bearbeiter' },
+  { bereich: 'verwaltung', key: null, header: 'Gespräch\nam', breite: 12, typ: 'datum' },
+  { bereich: 'verwaltung', key: null, header: 'durch', breite: 8, liste: 'bearbeiter' },
+  { bereich: 'verwaltung', key: null, header: 'in Bieterkreis\nam', breite: 14, typ: 'datum' },
+  { bereich: 'verwaltung', key: null, header: 'durch', breite: 8, liste: 'bearbeiter' },
+  { bereich: 'verwaltung', key: null, header: 'letzter\nKontakt am', breite: 12, typ: 'datum' },
+  { bereich: 'verwaltung', key: null, header: 'Absagegrund', breite: 30, liste: 'absagegrund' }
 ];
 
 /** Felder, ohne die eine Anfrage nicht bearbeitbar ist. */

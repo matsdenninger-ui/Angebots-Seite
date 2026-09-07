@@ -25,7 +25,7 @@ if (process.env.SMTP_HOST) {
 export const mailAktiv = Boolean(transport && process.env.MAIL_AN);
 
 function zeilenText(anfrage) {
-  return SPALTEN.filter((s) => s.key && !s.key.startsWith('_'))
+  return SPALTEN.filter((s) => s.bereich === 'bewerber' && s.key && !s.key.startsWith('_'))
     .map((s) => {
       const wert = anfrage[s.key];
       if (wert === undefined || wert === null || wert === '') return null;
