@@ -461,6 +461,8 @@
 
       formular.hidden = true;
       $('.fortschritt').hidden = true;
+      /* Die Einleitung erklärt das Ausfüllen — nach dem Absenden ist sie erledigt. */
+      $('#formularEinleitung').hidden = true;
       erfolgsmeldung.hidden = false;
       erfolgsmeldung.scrollIntoView({ block: 'center', behavior: 'smooth' });
     } catch {

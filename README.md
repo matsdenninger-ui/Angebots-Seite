@@ -157,6 +157,27 @@ npm run excel:rebuild   # überträgt neue Spalten in die bestehende Datei
 
 ---
 
+## Erscheinungsbild
+
+Nachgebaut nach dem Auftritt der GWB unter gwb-wohnungsbau.de:
+
+- **Grün als einzige Akzentfarbe**, sonst Weiß und Dunkelgrau. Kein zweiter
+  Akzent.
+- **Kopf** wie dort: Wortmarke links (großes grünes „GWB", grüner Strich,
+  klein der Zusatz), Telefonnummer prominent rechts, darunter die Navigation
+  rechtsbündig — der aktive Punkt grau hinterlegt.
+- **Vollbreites Bild**, direkt darunter das **grüne Claim-Band**
+  („über 30 Jahre Kompetenz im Wohnungsbau").
+- **Abschnittstitel in grünen Versalien**, normale Strichstärke.
+- **Flach**: keine abgerundeten Ecken, keine Schatten, schlichte Grotesk
+  (Arial-Stack, keine Fremdschrift wird nachgeladen).
+
+Zwei Dinge konnte ich nicht aus der Quelle übernehmen, weil die Domain aus der
+Entwicklungsumgebung nicht erreichbar war — beide stehen in der Liste
+„Vor dem Livegang": der exakte Grünwert und das Bühnenfoto.
+
+---
+
 ## Aufbau
 
 ```
@@ -213,9 +234,15 @@ mit 25 parallelen Eingängen: 25 Zeilen, lückenlose lfd. Nummern).
       (Telefon, E-Mail, Links zu Impressum und Datenschutz stehen aktuell als
       Platzhalter in `public/index.html`, markiert durch einen Kommentar über
       dem `<footer>`).
-- [ ] Farben unter `--gwb-*` in `public/styles.css` gegen das Corporate Design
-      abgleichen; das Logo im Kopf (`.marke__zeichen`) durch die echte Bilddatei
-      ersetzen.
+- [ ] `--gwb-gruen` in `public/styles.css` gegen den echten Hausfarbwert
+      prüfen. Der jetzige Wert `#7fb434` ist aus einem Bildschirmfoto der
+      Hauptseite **geschätzt**, nicht aus deren CSS ausgelesen. Eine Zeile,
+      der Rest der Seite zieht mit.
+- [ ] Bühnenbild einsetzen: Foto nach `public/bild/` legen und in
+      `public/styles.css` unter `.buehne` die Zeile `--buehne-bild` setzen.
+      Solange sie fehlt, steht dort eine neutrale graue Fläche.
+- [ ] Wortmarke: Der Kopf setzt „GWB" derzeit als Text (grün, grüner Strich,
+      Zusatz darunter). Wenn es die Logodatei gibt, ersetzt sie `.marke`.
 - [ ] Datenschutzerklärung um die Verarbeitung dieser Formulardaten ergänzen —
       der Einwilligungstext im Formular ersetzt sie nicht.
 - [ ] `.env` anlegen: `MAIL_AN` auf das Postfach setzen, das die Anfragen sehen

@@ -19,55 +19,66 @@
     <a class="sprungmarke" href="#formular">Direkt zum Anfrageformular</a>
 
     <header class="kopf">
-      <div class="huelle kopf__inhalt">
-        <a class="marke" href="#oben" aria-label="GWB Gewerbe- und Wohnungsbau GmbH">
-          <span class="marke__zeichen" aria-hidden="true">
-            <svg viewBox="0 0 40 32" role="presentation">
-              <path d="M4 28h32M8 28V15l12-9 12 9v13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="miter" />
-              <path d="M16 28v-8h8v8" fill="none" stroke="currentColor" stroke-width="2.5" />
-            </svg>
-          </span>
-          <span class="marke__text">
-            <strong>GWB</strong>
-            <span>Gewerbe- und Wohnungsbau</span>
-          </span>
+      <div class="huelle kopf__oben">
+        <a class="marke" href="https://www.gwb-wohnungsbau.de/de" aria-label="GWB Gewerbe- und Wohnungsbau GmbH — zur Startseite">
+          <span class="marke__kuerzel">GWB</span>
+          <span class="marke__zusatz">Gewerbe- und Wohnungsbau GmbH</span>
         </a>
 
-        <nav class="kopf__nav" aria-label="Seitenbereiche">
+        <p class="ruf">
+          Rufen Sie uns an:
+          <a href="tel:+492131204820">+49 21 31/20 48 2-0</a>
+        </p>
+      </div>
+
+      <nav class="kopf__nav" aria-label="Seitenbereiche">
+        <div class="huelle kopf__navinhalt">
+          <a class="ist-hier" href="#oben">Partneranfrage</a>
           <a href="#zusammenarbeit">Zusammenarbeit</a>
           <a href="#gewerke">Gewerke</a>
           <a href="#ablauf">Ablauf</a>
-          <a class="knopf knopf--klein" href="#formular">Anfrage stellen</a>
-        </nav>
-      </div>
+          <a href="#formular">Anfrage stellen</a>
+          <a href="https://www.gwb-wohnungsbau.de/de">Zur Hauptseite</a>
+        </div>
+      </nav>
     </header>
 
     <main id="oben">
+      <!-- ------------------------------------------------------------------
+           VERWALTUNG — Bühnenbild: Hier gehört ein Foto der GWB hin
+           (Baustelle oder fertiges Objekt, quer, mindestens 1600 px breit).
+           Datei nach public/bild/ legen und in styles.css die eine Zeile
+           --buehne-bild setzen. Bis dahin steht hier eine neutrale Fläche.
+           ------------------------------------------------------------------ -->
+      <div class="buehne" role="presentation"></div>
+
+      <p class="claim">über 30 Jahre Kompetenz im Wohnungsbau</p>
+
       <!-- ------------------------------------------------------------------ -->
-      <section class="buehne">
-        <div class="huelle buehne__raster">
-          <div class="buehne__text">
-            <p class="dachzeile">Für Nachunternehmer und Lieferanten</p>
-            <h1>Wir bauen im Großraum Düsseldorf.<br />Und suchen Betriebe, die liefern.</h1>
+      <section class="abschnitt" id="einstieg">
+        <div class="huelle einstieg">
+          <div class="einstieg__text">
+            <h1>Nachunternehmer und Lieferanten</h1>
             <p class="vorspann">
               Seit 1991 errichten wir Eigentumswohnungen und Häuser zwischen Kaarst, Meerbusch und
-              Düsseldorf. Wer bei uns auf der Liste steht, wird angefragt, sobald das nächste Objekt
-              in die Vergabe geht — Gewerk für Gewerk.
+              Düsseldorf. Wir vergeben gewerkeweise an Fachbetriebe aus der Region. Wer bei uns auf
+              der Liste steht, wird angefragt, sobald das nächste Objekt in die Vergabe geht.
             </p>
-            <div class="buehne__aktionen">
+            <p>
+              Tragen Sie sich hier ein: ein Formular, fünf Schritte, rund vier Minuten. Ihre Angaben
+              erreichen uns direkt — ohne Umweg über ein Postfach.
+            </p>
+            <p class="einstieg__aktionen">
               <a class="knopf" href="#formular">Anfrage stellen</a>
               <a class="knopf knopf--rand" href="#gewerke">Gewerke ansehen</a>
-            </div>
-            <p class="buehne__hinweis">
-              Ein Formular, fünf Schritte, rund vier Minuten. Ihre Angaben erreichen uns direkt —
-              ohne Umweg über ein Postfach.
             </p>
           </div>
 
-          <aside class="fakten" aria-label="Die GWB in Zahlen">
+          <aside class="fakten" aria-label="Die GWB auf einen Blick">
+            <h2>Auf einen Blick</h2>
             <dl>
               <div>
-                <dt>am Markt seit</dt>
+                <dt>Am Markt seit</dt>
                 <dd>1991</dd>
               </div>
               <div>
@@ -75,8 +86,8 @@
                 <dd>Kaarst</dd>
               </div>
               <div>
-                <dt>Bauen wir</dt>
-                <dd>Wohnungsbau &amp; Gewerbe</dd>
+                <dt>Wir bauen</dt>
+                <dd>Wohnungsbau und Gewerbe</dd>
               </div>
               <div>
                 <dt>Vergabe</dt>
@@ -90,8 +101,7 @@
       <!-- ------------------------------------------------------------------ -->
       <section class="abschnitt" id="zusammenarbeit">
         <div class="huelle">
-          <p class="dachzeile">Was Sie von uns erwarten können</p>
-          <h2>Ein Auftraggeber, der plant, bevor er anfragt</h2>
+          <h2>Was Sie von uns erwarten können</h2>
 
           <div class="karten">
             <article class="karte">
@@ -134,7 +144,6 @@
       <!-- ------------------------------------------------------------------ -->
       <section class="abschnitt abschnitt--getoent" id="gewerke">
         <div class="huelle">
-          <p class="dachzeile">Einordnung</p>
           <h2>Diese Gewerke vergeben wir</h2>
           <p class="einleitung">
             Sieben Bereiche, von der Baugrube bis zur Außenanlage. Im Formular ordnen Sie sich
@@ -153,7 +162,6 @@
       <!-- ------------------------------------------------------------------ -->
       <section class="abschnitt" id="ablauf">
         <div class="huelle">
-          <p class="dachzeile">Ablauf</p>
           <h2>Was nach dem Absenden passiert</h2>
 
           <ol class="ablauf">
@@ -203,9 +211,8 @@
       <!-- ------------------------------------------------------------------ -->
       <section class="abschnitt abschnitt--formular" id="formular">
         <div class="huelle huelle--schmal">
-          <p class="dachzeile">Anfrage</p>
-          <h2>Ihre Angaben</h2>
-          <p class="einleitung">
+          <h2>Ihre Anfrage</h2>
+          <p class="einleitung" id="formularEinleitung">
             Pflichtfelder sind mit <span class="pflicht">*</span> gekennzeichnet. Alles andere hilft
             uns bei der Einordnung, ist aber keine Bedingung — lieber eine unvollständige Anfrage
             als gar keine.
@@ -465,7 +472,7 @@
               Liste zurück, sobald das nächste Objekt in die Vergabe geht.
             </p>
             <p>
-              Dringend? <a href="tel:+492131204820">02131 204820</a> oder
+              Dringend? <a href="tel:+492131204820">+49 21 31/20 48 2-0</a> oder
               <a href="mailto:info@gwb-wohnungsbau.de">info@gwb-wohnungsbau.de</a>
             </p>
           </div>
@@ -492,7 +499,7 @@
         <div>
           <p class="fuss__titel">Kontakt</p>
           <p>
-            <a href="tel:+492131204820">02131 204820</a><br />
+            <a href="tel:+492131204820">+49 21 31/20 48 2-0</a><br />
             <a href="mailto:info@gwb-wohnungsbau.de">info@gwb-wohnungsbau.de</a>
           </p>
         </div>
