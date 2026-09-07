@@ -1,0 +1,13 @@
+node_modules/
+
+# Eingegangene Anfragen und Anlagen gehören nicht ins Repository.
+data/*.xlsx
+data/*.xlsx.bak
+data/*.xlsx.*.bak
+data/*.xlsx.tmp
+data/anfragen.jsonl
+data/anlagen/
+
+.env
+*.log
+.DS_Store
