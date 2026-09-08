@@ -132,9 +132,9 @@ Fünf Schritte, rund vier Minuten. Pflicht sind nur neun Felder — der Rest hil
 bei der Einordnung, blockiert aber niemanden.
 
 1. **Unternehmen** — Art der Zusammenarbeit, Firma, Ansprechpartner, Kontakt,
-   Sitz, Größe.
-2. **Gewerke** — 69 Gewerke in sieben Bereichen, mit Suche und Mehrfachauswahl.
-   Das Hauptgewerk wird aus der Auswahl gefüllt.
+   Sitz, Mitarbeiterzahl.
+2. **Gewerke** — das Gewerkeverzeichnis der GWB: 88 Gewerke in sechs Bereichen,
+   mit Suche und Mehrfachauswahl. Das Hauptgewerk wird aus der Auswahl gefüllt.
 3. **Kapazität** — Einsatzgebiet, eigene Kolonnen oder Sub, freie Kapazität,
    verfügbar ab, Auftragsgröße, Erfahrung im Wohnungsbau, Referenzen.
 4. **Nachweise** — PQ-VOB, Freistellungsbescheinigung, Unbedenklichkeits­-
@@ -144,6 +144,23 @@ bei der Einordnung, blockiert aber niemanden.
 
 Die Frage „Woher kennen Sie uns?“ ist bewusst aus der Interessentenliste
 übernommen: sie misst die *erste Berührung*, nicht den Weg dieser Anfrage.
+
+### Die Kostenstelle
+
+Jedes Gewerk trägt in `felder.js` seine Kostenstelle aus eurem Verzeichnis
+(`{ nr: 6400, name: 'Estricharbeiten' }`). Sie steht **nicht** im Formular —
+ein Bewerber kann mit eurer Kostenstellensystematik nichts anfangen, und
+`/api/felder` liefert die Gewerke deshalb nur mit Namen aus. Beim Eingang hängt
+der Server die Nummer des Hauptgewerks selbst an die Zeile: Spalte **KSt**.
+
+Im Blatt „Listen" steht das Verzeichnis vollständig mit Bereich und Kostenstelle.
+
+### Mitarbeiterzahl
+
+Der Bewerber tippt eine Zahl. Die **Größenklasse** (1–4, 5–9, 10–19, 20–49,
+50–99, 100 und mehr) leitet der Server daraus ab und schreibt sie in eine
+eigene Spalte — so bleibt die Angabe genau und trotzdem gruppiert auswertbar.
+Die Klassengrenzen stehen in `groessenklasseZu` in `server/felder.js`.
 
 ### Gewerke oder Auswahlmenüs ändern
 

@@ -121,13 +121,22 @@ function blattListenAnlegen(wb) {
   let zeile = 5;
   for (const gruppe of GEWERKE_GRUPPEN) {
     for (const gewerk of gruppe.gewerke) {
-      ws.getCell(zeile, gewerkeSpalte).value = gewerk;
+      ws.getCell(zeile, gewerkeSpalte).value = gewerk.name;
       ws.getCell(zeile, gewerkeSpalte + 1).value = gruppe.name;
+      ws.getCell(zeile, gewerkeSpalte + 2).value = gewerk.nr;
       zeile += 1;
     }
   }
   ws.getColumn(gewerkeSpalte).width = 38;
-  ws.getColumn(gewerkeSpalte + 1).width = 30;
+  ws.getColumn(gewerkeSpalte + 1).width = 32;
+  ws.getColumn(gewerkeSpalte + 2).width = 8;
+  ws.getCell(4, gewerkeSpalte + 2).value = 'KSt';
+  ws.getCell(4, gewerkeSpalte + 2).font = { bold: true, color: { argb: 'FFFFFFFF' } };
+  ws.getCell(4, gewerkeSpalte + 2).fill = {
+    type: 'pattern',
+    pattern: 'solid',
+    fgColor: { argb: FARBE_KOPF }
+  };
   ws.getCell(4, gewerkeSpalte + 1).value = 'Bereich';
   ws.getCell(4, gewerkeSpalte + 1).font = { bold: true, color: { argb: 'FFFFFFFF' } };
   ws.getCell(4, gewerkeSpalte + 1).fill = {

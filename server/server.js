@@ -108,10 +108,21 @@ app.use(express.static(OEFFENTLICH, { extensions: ['html'] }));
  * Ausgeliefert wird ausschließlich LISTEN_BEWERBER. Status, Absagegründe und
  * die Kürzel der Bearbeiter sind Verwaltungssache und verlassen den Server
  * nicht: diese Antwort kann jeder Besucher im Browser mitlesen.
+ *
+ * Aus demselben Grund gehen die Gewerke nur mit Namen hinaus. Die Kostenstelle
+ * ist unsere Buchhaltung — der Server hängt sie beim Eingang selbst an die
+ * Zeile, der Bewerber bekommt sie nie zu sehen.
  */
+const GEWERKE_OEFFENTLICH = GEWERKE_GRUPPEN.map((gruppe) => ({
+  id: gruppe.id,
+  name: gruppe.name,
+  hinweis: gruppe.hinweis,
+  gewerke: gruppe.gewerke.map((w) => w.name)
+}));
+
 app.get('/api/felder', (req, res) => {
   res.json({
-    gewerkeGruppen: GEWERKE_GRUPPEN,
+    gewerkeGruppen: GEWERKE_OEFFENTLICH,
     listen: LISTEN_BEWERBER,
     pflichtfelder: PFLICHTFELDER
   });

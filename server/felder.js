@@ -10,129 +10,158 @@
  * und die Gültigkeitsprüfung ziehen alle aus dieser Datei.
  */
 
-/** Gewerke, gruppiert nach Bauabschnitt — die Einordnung, die die GWB braucht. */
+/**
+ * Das Gewerkeverzeichnis der GWB — übernommen aus der internen Liste.
+ *
+ * "nr" ist die Kostenstelle aus dem Verzeichnis. Sie steht NICHT im Formular:
+ * ein Bewerber kann mit unserer Kostenstellensystematik nichts anfangen. In die
+ * Excel-Datei wird sie mitgeschrieben, damit sich eine Anfrage ohne Nachschlagen
+ * in die Kostenrechnung einordnen lässt.
+ *
+ * Reihenfolge und Schreibweise sind bewusst unverändert übernommen. Wer hier
+ * etwas ändert, ändert es im Formular, in der Prüfung und im Blatt "Listen"
+ * gleichzeitig.
+ */
 export const GEWERKE_GRUPPEN = [
   {
-    id: 'rohbau',
-    name: 'Rohbau & Erdarbeiten',
-    hinweis: 'Alles bis zum Rohbauabnahme-Termin.',
+    id: 'bau',
+    name: 'Bau- und Ausbaugewerke',
+    hinweis: 'Von der Baugrube bis zur Schließanlage.',
     gewerke: [
-      'Abbruch & Entsorgung',
-      'Erdarbeiten & Verbau',
-      'Spezialtiefbau & Gründung',
-      'Kanal- & Entwässerungsarbeiten',
-      'Rohbau (Maurer- & Betonarbeiten)',
-      'Beton-Fertigteile',
-      'Bewehrung / Betonstahl',
-      'Gerüstbau',
-      'Kran- & Geräteverleih',
-      'Baustelleneinrichtung & Container'
+      { nr: 100, name: 'Verbauarbeiten' },
+      { nr: 100, name: 'Erdarbeiten' },
+      { nr: 200, name: 'Rohbauarbeiten' },
+      { nr: 200, name: 'Fremdüberwachung Rohbau' },
+      { nr: 200, name: 'Spezialtiefbau' },
+      { nr: 200, name: 'Blitzschutz Gründung' },
+      { nr: 200, name: 'Beschichtung Tiefgaragenboden' },
+      { nr: 201, name: 'Tiefgaragen-Bodenbeschichtung' },
+      { nr: 202, name: 'Klinkerarbeiten' },
+      { nr: 500, name: 'Zimmerarbeiten' },
+      { nr: 600, name: 'Dachdeckerarbeiten' },
+      { nr: 600, name: 'Balkon- und Dachterassenplatten' },
+      { nr: 601, name: 'TG-Decke Abdichtung' },
+      { nr: 700, name: 'Leichtwände Gipsdielen' },
+      { nr: 800, name: 'Innenputz' },
+      { nr: 802, name: 'Trockenbauarbeiten' },
+      { nr: 900, name: 'Fertigteilgaragen' },
+      { nr: 2100, name: 'WDVS-Fassade' },
+      { nr: 2100, name: 'Fassade Holz' },
+      { nr: 2200, name: 'Fenster / Rollladen / Haustüren' },
+      { nr: 2200, name: 'BK-Anlage (in Schlosser enthalten)' },
+      { nr: 2600, name: 'Garagentor / Brandschutztor' },
+      { nr: 2800, name: 'Fugenversiegelung' },
+      { nr: 2900, name: 'Gerüstbau' },
+      { nr: 4300, name: 'Sanitärinstallation / Heizung' },
+      { nr: 4300, name: 'Geothermiebohrungen' },
+      { nr: 4400, name: 'Grundleitungen (auf dem Grundstück)' },
+      { nr: 4400, name: 'Kanalanschluß' },
+      { nr: 4500, name: 'Elektroinstallation' },
+      { nr: 4500, name: 'E-Mobilität TG' },
+      { nr: 4600, name: 'Aufzug' },
+      { nr: 4800, name: 'Lüftung / Klima' },
+      { nr: 4900, name: 'Bes. Einrichtungen' },
+      { nr: 4900, name: 'Brandmeldeanlage' },
+      { nr: 5401, name: 'Solar und PV-Anlagen' },
+      { nr: 6100, name: 'Fertigtreppen' },
+      { nr: 6200, name: 'Natur- und Betonwerksteinarbeiten' },
+      { nr: 6300, name: 'Fliesen (Wand+Boden)' },
+      { nr: 6400, name: 'Estricharbeiten' },
+      { nr: 6401, name: 'Oberbodenarbeiten' },
+      { nr: 6500, name: 'Schlosserarbeiten innen/außen' },
+      { nr: 6600, name: 'Stahlzargen (in 6700 enthalten)' },
+      { nr: 6700, name: 'Schreinerarbeiten Türen' },
+      { nr: 6700, name: 'Schreiner Abstellschränke, Keller' },
+      { nr: 6800, name: 'Malerarbeiten' },
+      { nr: 6801, name: 'Betonspachtelarbeiten' },
+      { nr: 7179, name: 'Schließanlage' }
     ]
   },
   {
-    id: 'huelle',
-    name: 'Gebäudehülle',
-    hinweis: 'Dach, Fassade, Fenster — der wetterdichte Abschluss.',
+    id: 'abbruch',
+    name: 'Abbruch- und Erschließung',
+    hinweis: 'Was vor dem ersten Spatenstich passiert.',
     gewerke: [
-      'Zimmer- & Holzbauarbeiten',
-      'Dachdecker- & Klempnerarbeiten',
-      'Bauwerksabdichtung',
-      'WDVS & Fassadenarbeiten',
-      'Außenputz',
-      'Fenster & Außentüren',
-      'Sonnenschutz, Rollladen & Raffstore',
-      'Metallbau, Schlosser & Geländer',
-      'Balkon- & Terrassenbeläge'
+      { nr: 100, name: 'Abbruch / Baureifmachung' },
+      { nr: 100, name: 'Trennung Hausanschlüsse' }
     ]
   },
   {
-    id: 'tga',
-    name: 'Technische Gebäudeausrüstung',
-    hinweis: 'Der Bereich mit den längsten Vorlaufzeiten.',
+    id: 'projektierung',
+    name: 'Projektierung / Ingenieurleistungen',
+    hinweis: 'Planung, Nachweise und baubegleitende Gutachten.',
     gewerke: [
-      'Heizung & Sanitär',
-      'Wärmepumpe & Geothermie',
-      'Lüftungstechnik',
-      'Elektroinstallation',
-      'Photovoltaik & Speicher',
-      'E-Ladeinfrastruktur',
-      'Aufzugsanlagen',
-      'Blitzschutz',
-      'Brandmelde- & Sicherheitstechnik',
-      'Mess-, Steuer- & Regeltechnik',
-      'Messdienst & Heizkostenverteilung'
+      { nr: 5200, name: 'Statik Allgemein+Bewehrungspläne' },
+      { nr: 5200, name: 'Prüfstatik Allgemein' },
+      { nr: 5200, name: 'Wärmeschutznachweis' },
+      { nr: 5200, name: 'Schallschutznachweis' },
+      { nr: 5300, name: 'Baugenehmigung' },
+      { nr: 5400, name: 'Bodengutachter' },
+      { nr: 5400, name: 'Vermesser' },
+      { nr: 5500, name: 'Entwässerungsgesuch' },
+      { nr: 5500, name: 'Planung Haustechnik' },
+      { nr: 5500, name: 'Elektroplanung' },
+      { nr: 5500, name: 'Schallschutzgutachten' },
+      { nr: 5500, name: 'SiGeKo' },
+      { nr: 5500, name: 'Brandschutzsachverständiger' },
+      { nr: 5500, name: 'Gutachter Tiefgaragenentlüftung' },
+      { nr: 5500, name: 'Beweissicherung Nachbargebäude' },
+      { nr: 5500, name: 'Lüftungsgutachten Wohnungen' },
+      { nr: 5500, name: 'Schadstoffgutachten' },
+      { nr: 5500, name: 'sonstige baubegleitende Gutachter' }
     ]
   },
   {
-    id: 'ausbau',
-    name: 'Innenausbau',
-    hinweis: 'Vom Estrich bis zur Schließanlage.',
+    id: 'hausanschluesse',
+    name: 'Hausanschlüsse',
+    hinweis: 'Anschlüsse an die Versorgungsnetze.',
     gewerke: [
-      'Estricharbeiten',
-      'Trockenbau',
-      'Innenputz',
-      'Fliesen- & Natursteinarbeiten',
-      'Bodenbeläge & Parkett',
-      'Maler- & Lackierarbeiten',
-      'Innentüren',
-      'Tischler & Einbaumöbel',
-      'Treppenbau',
-      'Schließanlagen & Briefkastenanlagen',
-      'Baureinigung'
+      { nr: 9100, name: 'Hausanschluß Gas' },
+      { nr: 9100, name: 'Hausanschluß Wasser' },
+      { nr: 9100, name: 'Hausanschluß Strom' },
+      { nr: 9100, name: 'Hausanschluß Telekom' },
+      { nr: 9100, name: 'Hausanschluß Kabelanschluß' }
     ]
   },
   {
     id: 'aussen',
-    name: 'Außenanlagen',
+    name: 'Aussenanlagen',
     hinweis: 'Was nach der Schlüsselübergabe sichtbar bleibt.',
     gewerke: [
-      'Garten- & Landschaftsbau',
-      'Pflaster- & Straßenbau',
-      'Zäune, Tore & Einfriedungen',
-      'Tiefgaragenausstattung & Markierung',
-      'Spielplatz- & Außenmöblierung',
-      'Winterdienst & Grünpflege'
+      { nr: 9200, name: 'Müllboxen' },
+      { nr: 9200, name: 'Gehweg anteilig' },
+      { nr: 9200, name: 'Außenanlagen' },
+      { nr: 9200, name: 'Außenanlagen Bepflanzung' }
     ]
   },
   {
-    id: 'planung',
-    name: 'Planung & Bauleitung',
-    hinweis: 'Freiberufliche Leistungen und Fachplanung.',
+    id: 'sonstiges',
+    name: 'Sonstiges',
+    hinweis: 'Baustelleneinrichtung und Dienstleistungen rund um das Bauvorhaben.',
     gewerke: [
-      'Architektur & Objektüberwachung',
-      'Tragwerksplanung',
-      'TGA-Fachplanung',
-      'Bauphysik & Schallschutz',
-      'Energieberatung & GEG-Nachweis',
-      'Brandschutzplanung & Prüfsachverständige',
-      'Vermessung',
-      'Baugrundgutachten',
-      'SiGeKo',
-      'Bauleitung & Poliere (Personalgestellung)'
-    ]
-  },
-  {
-    id: 'material',
-    name: 'Material & Lieferung',
-    hinweis: 'Für Lieferanten ohne eigene Montageleistung.',
-    gewerke: [
-      'Transportbeton',
-      'Mauerwerk & Baustoffe',
-      'Betonstahl & Stahlhandel',
-      'Dämmstoffe',
-      'Fenster & Türen (Herstellung)',
-      'Sanitärobjekte & Armaturen',
-      'Fliesen & Naturstein (Handel)',
-      'Bodenbeläge (Handel)',
-      'Küchen',
-      'Aufzüge (Herstellung)',
-      'Photovoltaik-Komponenten',
-      'Gerüst- & Schalungsmaterial'
+      { nr: 7900, name: 'Sonstiges Reinigung' },
+      { nr: 7900, name: 'Sonstiges Bautoilette (über Rohbau)' },
+      { nr: 7900, name: 'Sonstiges Kernbohrungen' },
+      { nr: 7900, name: 'Sonstiges Container' },
+      { nr: 7900, name: 'Sonstiges Baustellenabsperrung' },
+      { nr: 7900, name: 'Sonstiges Anmietung öffentlicher Flächen' },
+      { nr: 7900, name: 'Sonstiges Bauzaun (über Baustellenabsperrung)' },
+      { nr: 7900, name: 'Sonstiges Bauwasser' },
+      { nr: 7900, name: 'Sonstiges Baustrom' },
+      { nr: 7900, name: 'Sonstiges Makler' },
+      { nr: 7900, name: 'Sonstiges Finanzdienstleister' },
+      { nr: 7900, name: 'Sonstiges' }
     ]
   }
 ];
 
-export const ALLE_GEWERKE = GEWERKE_GRUPPEN.flatMap((g) => g.gewerke);
+/** Alle Gewerkenamen — dagegen prüft der Server. */
+export const ALLE_GEWERKE = GEWERKE_GRUPPEN.flatMap((g) => g.gewerke.map((w) => w.name));
+
+/** Gewerkename -> Kostenstelle. Für die Excel-Spalte "KSt". */
+export const GEWERK_NUMMER = new Map(
+  GEWERKE_GRUPPEN.flatMap((g) => g.gewerke.map((w) => [w.name, w.nr]))
+);
 
 /* ==========================================================================
    ZWEI BEREICHE — die Trennlinie dieses Projekts
@@ -155,14 +184,10 @@ export const LISTEN_BEWERBER = {
     'Nachunternehmer und Lieferant',
     'Planung / Dienstleistung'
   ],
-  mitarbeiter: [
-    '1–4',
-    '5–9',
-    '10–19',
-    '20–49',
-    '50–99',
-    '100 und mehr'
-  ],
+  /* Wird nicht gefragt, sondern aus der eingetippten Mitarbeiterzahl abgeleitet
+     (siehe groessenklasseZu). Steht als Menü in der Excel-Datei, damit sich
+     danach filtern lässt. */
+  groessenklasse: ['1–4', '5–9', '10–19', '20–49', '50–99', '100 und mehr'],
   kolonnen: [
     'ausschließlich eigene Mitarbeiter',
     'überwiegend eigene, teils Nachunternehmer',
@@ -291,8 +316,10 @@ export const SPALTEN = [
   { bereich: 'bewerber', key: 'email', header: 'E-Mail', breite: 28 },
   { bereich: 'bewerber', key: 'website', header: 'Website', breite: 24 },
   { bereich: 'bewerber', key: 'gruendungsjahr', header: 'seit', breite: 7, typ: 'zahl' },
-  { bereich: 'bewerber', key: 'mitarbeiter', header: 'Mitarbeiter', breite: 12, liste: 'mitarbeiter' },
-  { bereich: 'bewerber', key: 'hauptgewerk', header: 'Hauptgewerk', breite: 28 },
+  { bereich: 'bewerber', key: 'mitarbeiter', header: 'Mitarbeiter', breite: 11, typ: 'zahl' },
+  { bereich: 'bewerber', key: 'groessenklasse', header: 'Größen-\nklasse', breite: 12, liste: 'groessenklasse' },
+  { bereich: 'bewerber', key: 'hauptgewerkNr', header: 'KSt', breite: 7, typ: 'zahl' },
+  { bereich: 'bewerber', key: 'hauptgewerk', header: 'Hauptgewerk', breite: 30 },
   { bereich: 'bewerber', key: 'gewerke', header: 'weitere Gewerke', breite: 40 },
   { bereich: 'bewerber', key: 'gewerkeGruppen', header: 'Bereiche', breite: 24 },
   { bereich: 'bewerber', key: 'leistung', header: 'Leistungsbeschreibung', breite: 45 },
@@ -323,6 +350,23 @@ export const SPALTEN = [
   { bereich: 'verwaltung', key: null, header: 'letzter\nKontakt am', breite: 12, typ: 'datum' },
   { bereich: 'verwaltung', key: null, header: 'Absagegrund', breite: 30, liste: 'absagegrund' }
 ];
+
+/**
+ * Ordnet eine Mitarbeiterzahl der Größenklasse zu.
+ *
+ * Der Bewerber tippt eine Zahl — die ist genauer und schneller getippt als ein
+ * Menü ausgeklappt. Die Klasse leiten wir daraus ab, damit sich die Liste
+ * trotzdem gruppiert auswerten lässt.
+ */
+export function groessenklasseZu(anzahl) {
+  if (!Number.isFinite(anzahl) || anzahl < 1) return null;
+  if (anzahl < 5) return '1–4';
+  if (anzahl < 10) return '5–9';
+  if (anzahl < 20) return '10–19';
+  if (anzahl < 50) return '20–49';
+  if (anzahl < 100) return '50–99';
+  return '100 und mehr';
+}
 
 /** Felder, ohne die eine Anfrage nicht bearbeitbar ist. */
 export const PFLICHTFELDER = [

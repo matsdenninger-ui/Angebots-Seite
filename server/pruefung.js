@@ -13,9 +13,11 @@
 import {
   LISTEN_BEWERBER,
   ALLE_GEWERKE,
+  GEWERK_NUMMER,
   PFLICHTFELDER,
   MAX_LAENGE,
-  GEWERKE_GRUPPEN
+  GEWERKE_GRUPPEN,
+  groessenklasseZu
 } from './felder.js';
 
 const EMAIL_MUSTER = /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i;
@@ -56,7 +58,6 @@ export function anfragePruefen(eingabe) {
   /* --- Auswahlfelder: müssen aus dem Menü kommen --- */
   const auswahlFelder = [
     'art',
-    'mitarbeiter',
     'kolonnen',
     'einsatzradius',
     'kapazitaet',
@@ -83,6 +84,7 @@ export function anfragePruefen(eingabe) {
       fehler.push(`Hauptgewerk: „${hauptgewerk}“ steht nicht zur Auswahl.`);
     } else {
       anfrage.hauptgewerk = hauptgewerk;
+      anfrage.hauptgewerkNr = GEWERK_NUMMER.get(hauptgewerk) ?? null;
     }
   }
 
@@ -151,6 +153,17 @@ export function anfragePruefen(eingabe) {
       fehler.push(`Gründungsjahr: Bitte eine Jahreszahl zwischen 1800 und ${heute} angeben.`);
     } else {
       anfrage.gruendungsjahr = zahl;
+    }
+  }
+
+  const mitarbeiter = text(eingabe.mitarbeiter, 6);
+  if (mitarbeiter) {
+    const zahl = Number(mitarbeiter);
+    if (!Number.isInteger(zahl) || zahl < 1 || zahl > 100000) {
+      fehler.push('Mitarbeiter: Bitte eine ganze Zahl ab 1 angeben.');
+    } else {
+      anfrage.mitarbeiter = zahl;
+      anfrage.groessenklasse = groessenklasseZu(zahl);
     }
   }
 

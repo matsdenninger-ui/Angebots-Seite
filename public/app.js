@@ -186,7 +186,9 @@
 
     const haupt = $('#hauptgewerk');
     const bisher = haupt.value;
-    const quelle = gewaehlt.length ? gewaehlt : felder.gewerkeGruppen.flatMap((g) => g.gewerke);
+    const quelle = gewaehlt.length
+      ? gewaehlt
+      : felder.gewerkeGruppen.flatMap((g) => g.gewerke);
 
     haupt.innerHTML = '';
     const leer = new Option('Bitte wählen', '');
