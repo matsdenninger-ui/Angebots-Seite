@@ -174,6 +174,65 @@ npm run excel:rebuild   # überträgt neue Spalten in die bestehende Datei
 
 ---
 
+## Einbau in die bestehende Website
+
+Die Seite bringt ihren eigenen kleinen Server mit (Node). Sie ist **nicht** an
+einen Pfad gebunden: Verweise und Serveraufrufe werden zur Laufzeit aus der
+eigenen Adresse abgeleitet. Sie läuft deshalb unverändert auf eigener Domain,
+unter einem Unterpfad und im iframe.
+
+### Variante A — Unterpfad: `gwb-wohnungsbau.de/partner/`
+
+Für den Besucher am unauffälligsten: gleiche Domain, gleiches Zertifikat, ein
+Menüpunkt mehr. Der bestehende Webserver reicht den Pfad an die Partnerseite
+durch, alles andere an der Website bleibt unberührt.
+
+Fertige Vorlage: `betrieb/nginx-unterpfad.conf`. Danach im Menü der Hauptseite
+auf `/partner/` verlinken — sinnvoll neben „Stellenangebote".
+
+### Variante B — Eigene Adresse: `partner.gwb-wohnungsbau.de`
+
+Wenn niemand an die Konfiguration der Hauptseite heran will oder soll. Braucht
+einen DNS-Eintrag und ein eigenes Zertifikat, dafür sind beide Seiten technisch
+voneinander unabhängig.
+
+Vorlage: `betrieb/nginx-subdomain.conf`.
+
+### Variante C — iframe im CMS
+
+Wenn am Webserver gar nichts geändert werden kann: eine leere Seite im CMS
+anlegen und einbetten.
+
+```html
+<iframe src="https://partner.gwb-wohnungsbau.de/"
+        style="width:100%;height:1400px;border:0"
+        title="Anfrage für Nachunternehmer und Lieferanten"></iframe>
+```
+
+Der schwächste Weg: feste Höhe, doppelte Kopfzeile, und Vor- und Zurück im
+Browser verhalten sich merkwürdig. Nur, wenn A und B ausscheiden.
+
+### Der Dienst dahinter
+
+Bei allen drei Varianten läuft im Hintergrund derselbe Node-Dienst.
+
+```bash
+sudo cp betrieb/gwb-partnerseite.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable --now gwb-partnerseite
+```
+
+Voraussetzungen: ein Linux-Server mit Node 20 oder neuer, erreichbar für den
+Webserver. Ein kleiner virtueller Server genügt — die Seite hat keine Datenbank
+und keinen nennenswerten Betrieb.
+
+**Wichtig:** `PROXY_EBENEN` in der `.env` muss zur Zahl der vorgeschalteten
+Proxys passen (bei nginx davor: `1`). Sonst sieht der Server bei allen
+Besuchern dieselbe Adresse und die Bremse gegen Massenversand greift für alle
+gemeinsam.
+
+---
+
 ## Erscheinungsbild
 
 Nachgebaut nach dem Auftritt der GWB unter gwb-wohnungsbau.de:

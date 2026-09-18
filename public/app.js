@@ -12,6 +12,16 @@
   const $ = (auswahl, wurzel = document) => wurzel.querySelector(auswahl);
   const $$ = (auswahl, wurzel = document) => [...wurzel.querySelectorAll(auswahl)];
 
+  /**
+   * Basis für die Serveraufrufe, abgeleitet aus dem eigenen <script>-Tag.
+   *
+   * Damit läuft die Seite an jeder Stelle: als eigene Domain, unter
+   * gwb-wohnungsbau.de/partner/ hinter einem Reverse Proxy oder im iframe.
+   * Mit fest verdrahtetem "/api/..." ginge nur die eigene Domain.
+   */
+  const BASIS = new URL('.', document.currentScript?.src ?? window.location.href);
+  const pfad = (teil) => new URL(teil, BASIS).toString();
+
   const formular = $('#anfrageformular');
   const fehlerkasten = $('#fehlerkasten');
   const fehlerliste = $('#fehlerliste');
@@ -32,7 +42,7 @@
   /* ====================================================================== */
 
   async function felderLaden() {
-    const antwort = await fetch('/api/felder');
+    const antwort = await fetch(pfad('api/felder'));
     if (!antwort.ok) throw new Error(`Server antwortete mit ${antwort.status}`);
     return antwort.json();
   }
@@ -446,7 +456,7 @@
     absendenKnopf.textContent = 'Wird gesendet …';
 
     try {
-      const antwort = await fetch('/api/anfrage', {
+      const antwort = await fetch(pfad('api/anfrage'), {
         method: 'POST',
         body: new FormData(formular)
       });

@@ -1,0 +1,31 @@
+# systemd-Dienst für die Partnerseite.
+#
+# Einrichten:
+#   sudo cp betrieb/gwb-partnerseite.service /etc/systemd/system/
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now gwb-partnerseite
+#
+# Logbuch ansehen:  journalctl -u gwb-partnerseite -f
+
+[Unit]
+Description=GWB Partnerseite (Nachunternehmer- und Lieferantenanfragen)
+After=network.target
+
+[Service]
+Type=simple
+User=gwb
+WorkingDirectory=/opt/gwb-partnerseite
+EnvironmentFile=/opt/gwb-partnerseite/.env
+ExecStart=/usr/bin/node server/server.js
+Restart=always
+RestartSec=5
+
+# Der Dienst braucht nur seinen eigenen Ordner und das Ziel der Excel-Datei.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/gwb-partnerseite/data
+
+[Install]
+WantedBy=multi-user.target
