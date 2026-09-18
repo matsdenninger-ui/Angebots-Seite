@@ -212,6 +212,25 @@ anlegen und einbetten.
 Der schwächste Weg: feste Höhe, doppelte Kopfzeile, und Vor- und Zurück im
 Browser verhalten sich merkwürdig. Nur, wenn A und B ausscheiden.
 
+### Zuerst prüfen: Läuft Node auf eurem Hosting?
+
+Das ist die Weiche, an der alles hängt. Klassische Webhosting-Pakete (IONOS,
+Strato, All-Inkl im Standardtarif) können **PHP, aber kein Node** — dort lässt
+sich dieser Dienst nicht betreiben.
+
+So findet man es heraus:
+
+| Frage | Wo nachsehen |
+| --- | --- |
+| Welcher Hoster? | Rückwärtsauflösung der Domain-IP, oder die Rechnung im Postfach |
+| Webhosting oder eigener Server? | Beim Hoster einloggen → „Meine Produkte" / „Verträge". Steht dort *Webhosting* oder *Hosting-Paket*, ist es geteilt; *VPS*, *Cloud Server* oder *Dedicated* heißt eigener Server |
+| Läuft PHP? | Eine Datei `test.php` mit `<?php phpinfo();` hochladen und aufrufen |
+| Wer betreut die Seite? | Impressum der eigenen Website, dort steht oft „Realisierung: …" |
+
+Ergibt die Prüfung „nur Webhosting", gibt es drei Wege: einen kleinen virtuellen
+Server dazunehmen (ab etwa 5 € im Monat), die Serverseite auf PHP umbauen, oder
+das Formular an Microsoft 365 anbinden.
+
 ### Der Dienst dahinter
 
 Bei allen drei Varianten läuft im Hintergrund derselbe Node-Dienst.
